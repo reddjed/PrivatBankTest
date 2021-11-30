@@ -6,6 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using PrivatBankTestApi.Interfaces;
+using PrivatBankTestApi.Publisher;
+using PrivatBankTestApi.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +28,8 @@ namespace PrivatBankTestApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IMsgPublisher, MsgPublisher>();
+            services.AddSingleton<IPublisherService, MsgPublisherService>();
             services.AddControllers();
         }
 

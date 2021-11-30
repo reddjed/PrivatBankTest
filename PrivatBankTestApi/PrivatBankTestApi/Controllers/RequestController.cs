@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using PrivatBankTestApi.DTO;
+using PrivatBankTestApi.Interfaces;
+using PrivatBankTestApi.Messages;
 using RabbitMQ.Client;
 using System;
 using System.Collections.Generic;
@@ -11,39 +15,37 @@ using System.Threading.Tasks;
 
 namespace PrivatBankTestApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class RequestController : ControllerBase
     {
+        private readonly IPublisherService _msgPublisherService;
+        public RequestController(IPublisherService msgPublisherService)
+        {
+            _msgPublisherService = msgPublisherService;
+        }
         // GET: api/<RequestController>
         [HttpGet]
-        public StatusCodeResult Get()
+        public async Task<IActionResult> Get()
         {
-            var factory = new ConnectionFactory
-            {
-                Uri = new Uri("amqp://guest:guest@localhost:5672")
-            };
-            using var connection = factory.CreateConnection();
-            using var channel = connection.CreateModel();
-            channel.QueueDeclare("demo-qeue",
-                durable: true,
-                exclusive: false,
-                arguments: null);
-            var massege = new { Data = "Test" };
-            var body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(massege));
-            channel.BasicPublish("", "demo-qeue", null, body);
-            return StatusCode(200);
+            return Ok();
         }
 
         // GET api/<RequestController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        
+        [HttpGet("{RequestId}")]
+        [ProducesResponseType(typeof(Result<ResponseByIdDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Result<ResponseByIdDTO>), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetRequestById([FromRoute] ReqestByIdMsg msg)
         {
-            return "value";
-        }
+            var response = await _msgPublisherService.PublishRequestByIdAsync(msg);
 
-        // POST api/<RequestController>
-        [HttpPost]
+            return response.IsSuccess
+                ? StatusCode(StatusCodes.Status200OK, response.ResultValue)
+                : StatusCode(StatusCodes.Status404NotFound, response.ErrorMessage);
+        }
+            // POST api/<RequestController>
+            [HttpPost]
         public void Post([FromBody] string value)
         {
         }
