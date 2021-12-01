@@ -13,58 +13,58 @@ namespace PrivatBankTestApi.Publisher
 {
     public class MsgPublisher : IMsgPublisher
     {
-        private readonly IConnection connection;
-        private readonly IModel channel;
-        private readonly string replyQueueName;
-        private readonly EventingBasicConsumer consumer;
-        private readonly BlockingCollection<string> respQueue = new BlockingCollection<string>();
-        private readonly IBasicProperties props;
+        private readonly IConnection _connection;
+        private readonly IModel _channel;
+        private readonly string _replyQueueName;
+        private readonly EventingBasicConsumer _consumer;
+        private readonly BlockingCollection<string> _respQueue = new BlockingCollection<string>();
+        private readonly IBasicProperties _props;
 
         public MsgPublisher()
         {
             var factory = new ConnectionFactory() { HostName = "localhost" };
 
-            connection = factory.CreateConnection();
-            channel = connection.CreateModel();
-            replyQueueName = channel.QueueDeclare().QueueName;
-            consumer = new EventingBasicConsumer(channel);
+            _connection = factory.CreateConnection();
+            _channel = _connection.CreateModel();
+            _replyQueueName = _channel.QueueDeclare().QueueName;
+            _consumer = new EventingBasicConsumer(_channel);
 
-            props = channel.CreateBasicProperties();
+            _props = _channel.CreateBasicProperties();
             var correlationId = Guid.NewGuid().ToString();
-            props.CorrelationId = correlationId;
-            props.ReplyTo = replyQueueName;
+            _props.CorrelationId = correlationId;
+            _props.ReplyTo = _replyQueueName;
 
-            consumer.Received += (model, e) =>
+            _consumer.Received += (model, e) =>
             {
                 var body = e.Body.ToArray();
                 var response = Encoding.UTF8.GetString(body);
                 if (e.BasicProperties.CorrelationId == correlationId)
                 {
-                    respQueue.Add(response);
+                    _respQueue.Add(response);
                 }
             };
 
-            channel.BasicConsume(
-                consumer: consumer,
-                queue: replyQueueName,
+            _channel.BasicConsume(
+                consumer: _consumer,
+                queue: _replyQueueName,
                 autoAck: true);
         }
 
         public string ToQueue(string message, string queue)
         {
-            var messageBytes = Encoding.UTF8.GetBytes(message);
-            channel.BasicPublish(
+            var messageBuffer= Encoding.UTF8.GetBytes(message);
+            _channel.BasicPublish(
                 exchange: "",
                 routingKey: queue,
-                basicProperties: props,
-                body: messageBytes);
+                basicProperties: _props,
+                body: messageBuffer);
 
-            return respQueue.Take();
+            return _respQueue.Take();
         }
 
         public void Close()
         {
-            connection.Close();
+            _connection?.Close();
         }
     }
 }

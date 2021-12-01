@@ -1,15 +1,13 @@
-﻿using PrivatBankTestApi.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PrivatBankTestApi.DTO
+namespace PrivatBankTestApi.Messages
 {
-    public class ResponseByIdDTO
+    public class RequestsMsg
     {
         public int ClentId { get; set; }
         public string DepartmentAdress { get; set; }
-        public Status RequestStatus { get; set; }
     }
 }

@@ -1,5 +1,4 @@
-﻿using PrivatBankTestApi.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,6 +9,6 @@ namespace PrivatBankTestApi.DTO
     {
         public int ClentId { get; set; }
         public string DepartmentAdress { get; set; }
-        public Status RequestStatus { get; set; }
+        public bool? RequestStatus { get; set; } //true - Processing, null - Canceled, false - ready
     }
 }

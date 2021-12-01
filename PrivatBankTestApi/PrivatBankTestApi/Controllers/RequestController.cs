@@ -38,28 +38,19 @@ namespace PrivatBankTestApi.Controllers
         [ProducesResponseType(typeof(Result<ResponseByIdDTO>), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetRequestById([FromRoute] ReqestByIdMsg msg)
         {
+            
             var response = await _msgPublisherService.PublishRequestByIdAsync(msg);
 
             return response.IsSuccess
-                ? StatusCode(StatusCodes.Status200OK, response.ResultValue)
+                ? StatusCode(StatusCodes.Status200OK, response.Value)
                 : StatusCode(StatusCodes.Status404NotFound, response.ErrorMessage);
         }
+
             // POST api/<RequestController>
-            [HttpPost]
+        [HttpPost]
         public void Post([FromBody] string value)
         {
         }
 
-        // PUT api/<RequestController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<RequestController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }
