@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PrivatBankTestApi.DTO
+namespace Consumer.DTO
 {
     public class ResponseByIdDTO
     {

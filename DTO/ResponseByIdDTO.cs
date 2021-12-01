@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace PrivatBankTestApi.DTO
 {
-    public class ResponseDTO
+    public class ResponseByIdDTO
     {
-        public int CLientId { get; set; }
+        public int ClentId { get; set; }
         public string DepartmentAdress { get; set; }
-        public decimal Amount { get; set; }
-        public string Currency { get; set; }
-        public Status RequestStatus { get; set; } 
+        public Status RequestStatus { get; set; }
     }
 }
