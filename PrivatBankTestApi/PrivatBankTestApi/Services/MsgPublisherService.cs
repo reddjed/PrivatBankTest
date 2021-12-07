@@ -19,14 +19,19 @@ namespace PrivatBankTestApi.Services
         }
         public async Task<Result<string>> PublishRequestAsync(RequestMsg msg)
         {
-            throw new NotImplementedException();
+            var body = JsonConvert.SerializeObject(msg);
+
+            var data = await Task.Run(() => _msgPublisher.ToQueue(body, "rpc_queue1"));
+            var response = JsonConvert.DeserializeObject<Result<string>>(data);
+            return response;
         }
 
-        public async Task<Result<ResponseByIdDTO>> PublishRequestByIdAsync(ReqestByIdMsg msg)
+        public async Task<Result<Response_GetByIdDTO>> PublishRequestByIdAsync(ReqestByIdMsg msg)
         {
             var body = JsonConvert.SerializeObject(msg);
-            var data = await Task.Run(() => _msgPublisher.ToQueue(body, "demo-queue"));
-            var response = JsonConvert.DeserializeObject<Result<ResponseByIdDTO>>(data);
+
+            var data = await Task.Run(() => _msgPublisher.ToQueue(body, "rpc_queue"));
+            var response = JsonConvert.DeserializeObject<Result<Response_GetByIdDTO>>(data);
             return response;     
         }
 

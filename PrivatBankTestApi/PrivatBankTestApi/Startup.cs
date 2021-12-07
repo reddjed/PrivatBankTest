@@ -29,7 +29,7 @@ namespace PrivatBankTestApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IMsgPublisher, MsgPublisher>();
-            services.AddSingleton<IPublisherService, MsgPublisherService>();
+            services.AddScoped<IPublisherService, MsgPublisherService>();
             services.AddControllers();
         }
 

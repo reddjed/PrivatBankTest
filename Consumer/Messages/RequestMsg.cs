@@ -7,9 +7,10 @@ namespace Consumer.Messages
 {
     public class RequestMsg
     {
-        public int CLientId { get; set; }
-        public string DepartmentAdress { get; set; }
-        public decimal Amount { get; set; }
+        public string CLientId { get; set; }
+        public string DepartmentAddress { get; set; }
+        public string Amount { get; set; }
+        public string Status { get; set; }
         public string Currency { get; set; }
     }
 }

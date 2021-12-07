@@ -9,7 +9,7 @@ namespace PrivatBankTestApi.Interfaces
 {
    public interface IPublisherService
     {
-        Task<Result<ResponseByIdDTO>> PublishRequestByIdAsync(ReqestByIdMsg msg);
+        Task<Result<Response_GetByIdDTO>> PublishRequestByIdAsync(ReqestByIdMsg msg);
         Task<Result<ResponseDTO>> PublishRequestsAsync(RequestsMsg msg);
         Task<Result<string>> PublishRequestAsync(RequestMsg msg);
     }

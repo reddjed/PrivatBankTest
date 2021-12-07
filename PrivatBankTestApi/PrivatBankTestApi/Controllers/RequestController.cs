@@ -32,13 +32,13 @@ namespace PrivatBankTestApi.Controllers
         }
 
         // GET api/<RequestController>/5
-        
+
         [HttpGet("{RequestId}")]
-        [ProducesResponseType(typeof(Result<ResponseByIdDTO>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(Result<ResponseByIdDTO>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(Result<Response_GetByIdDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Result<Response_GetByIdDTO>), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetRequestById([FromRoute] ReqestByIdMsg msg)
         {
-            
+
             var response = await _msgPublisherService.PublishRequestByIdAsync(msg);
 
             return response.IsSuccess
@@ -46,10 +46,15 @@ namespace PrivatBankTestApi.Controllers
                 : StatusCode(StatusCodes.Status404NotFound, response.ErrorMessage);
         }
 
-            // POST api/<RequestController>
-        [HttpPost]
-        public void Post([FromBody] string value)
+        // POST api/<RequestController>
+        [HttpPost("{InsertRequest}")]
+        public async Task<IActionResult> InsertRequest([FromBody] RequestMsg msg)
         {
+            var response = await _msgPublisherService.PublishRequestAsync(msg);
+
+            return response.IsSuccess
+                ? StatusCode(StatusCodes.Status200OK, response.Value)
+                : StatusCode(StatusCodes.Status404NotFound, response.ErrorMessage);
         }
 
     }

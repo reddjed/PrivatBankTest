@@ -4,10 +4,19 @@ using System.Text;
 
 namespace Consumer.Common
 {
-    class ExecutionRes<T> where T : class
+    public class ExecutionRes
     {
-        public bool IsSuccess { get; set; } = false;
-        public T Value { get; set; }
-        public string ErrorMessage { get; set; }
+        public bool IsSuccess { get; protected set; }
+        
+        public string ErrorMessage { get; protected set; }
+
+        public static ExecutionRes CreateErrorResult(string errorMessage)
+        {
+            return new ExecutionRes
+            {
+                IsSuccess = false,
+                ErrorMessage = errorMessage
+            };
+        }
     }
 }
